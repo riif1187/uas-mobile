@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dokumentasi Sistem Fuzzy Prestasi Mahasiswa</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: #1a1a2e;
+            background: #f5f6fa;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 50px 60px;
+            border-radius: 12px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+        }
+        h1 {
+            font-size: 26px;
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 12px;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+        h2 {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            padding-left: 10px;
+            border-left: 4px solid #3498db;
+        }
+        h3 {
+            font-size: 17px;
+            color: #34495e;
+            margin-top: 28px;
+            margin-bottom: 12px;
+        }
+        p { margin-bottom: 14px; text-align: justify; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 24px;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 10px 14px;
+            border: 1px solid #dcdde1;
+            text-align: left;
+        }
+        th {
+            background: #2c3e50;
+            color: #fff;
+            font-weight: 600;
+        }
+        tr:nth-child(even) { background: #f8f9fa; }
+        tr:hover { background: #eef2f7; }
+        code {
+            background: #f1f2f6;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #e74c3c;
+        }
+        pre {
+            background: #2d3436;
+            color: #dfe6e9;
+            padding: 16px 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 14px 0 24px;
+        }
+        .formula-box {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 14px 18px;
+            margin: 10px 0 16px;
+            border-radius: 0 6px 6px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .diagram-container {
+            background: #fafbfc;
+            border: 1px solid #dcdde1;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 16px 0 24px;
+            text-align: center;
+        }
+        .diagram-container .mermaid {
+            display: inline-block;
+        }
+        .badge {
+            display: inline-block;
+            background: #3498db;
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-green { background: #27ae60; }
+        .badge-orange { background: #f39c12; }
+        .badge-red { background: #e74c3c; }
+        ul, ol { margin: 10px 0 16px 24px; }
+        li { margin-bottom: 6px; }
+        .note {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        .var-table td:first-child { font-weight: 600; }
+        .section-divider {
+            border: none;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #dcdde1, transparent);
+            margin: 40px 0;
+        }
+        @media print {
+            body { background: #fff; padding: 0; }
+            .container { box-shadow: none; padding: 30px; }
+            .diagram-container { break-inside: avoid; }
+            pre { white-space: pre-wrap; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>&#128202; Dokumentasi Sistem Fuzzy Prestasi Mahasiswa</h1>
+    <p style="color:#636e72; font-size:14px; margin-top:-16px;">
+        Metode: <span class="badge">Mamdani</span> &nbsp;|&nbsp; Defuzzifikasi: <span class="badge badge-green">Centroid</span> &nbsp;|&nbsp; Fungsi: <span class="badge badge-orange">Trapesium</span>
+    </p>
+
+    <!-- ============================================================ -->
+    <!-- BAGIAN 1: FUNGSI KEANGGOTAAN -->
+    <!-- ============================================================ -->
+    <h2>1. Fungsi Keanggotaan (Membership Functions)</h2>
+    <p>Setiap variabel direpresentasikan dengan fungsi <strong>trapesium</strong> yang didefinisikan oleh 4 parameter <code>(a, b, c, d)</code>:</p>
+    <div class="formula-box">
+&#956;(x) = 0,                                          x &lt; a atau x &gt; d<br>
+       (x - a) / (b - a),                         a &le; x &lt; b<br>
+       1,                                          b &le; x &le; c<br>
+       (d - x) / (d - c),                         c &lt; x &le; d
+    </div>
+
+    <!-- 1.1 -->
+    <h3>1.1 Variabel Input: Jumlah Prestasi</h3>
+    <p>Domain: <strong>[0, 10]</strong></p>
+    <table>
+        <tr><th>Himpunan</th><th>a</th><th>b</th><th>c</th><th>d</th><th>Rumus</th></tr>
+        <tr><td>Sedikit</td><td>0</td><td>0</td><td>2</td><td>3</td>
+            <td><code>1, 0&le;x&le;2; (3-x)/1, 2&lt;x&le;3; 0, x&gt;3</code></td></tr>
+        <tr><td>Sedang</td><td>2</td><td>3</td><td>5</td><td>6</td>
+            <td><code>(x-2)/1, 2&le;x&lt;3; 1, 3&le;x&le;5; (6-x)/1, 5&lt;x&le;6; 0, lain</code></td></tr>
+        <tr><td>Banyak</td><td>5</td><td>6</td><td>10</td><td>10</td>
+            <td><code>(x-5)/1, 5&le;x&lt;6; 1, 6&le;x&le;10; 0, x&lt;5</code></td></tr>
+    </table>
+
+    <!-- 1.2 -->
+    <h3>1.2 Variabel Input: Total Poin</h3>
+    <p>Domain: <strong>[0, 120]</strong></p>
+    <table>
+        <tr><th>Himpunan</th><th>a</th><th>b</th><th>c</th><th>d</th><th>Rumus</th></tr>
+        <tr><td>Rendah</td><td>0</td><td>0</td><td>20</td><td>40</td>
+            <td><code>1, 0&le;x&le;20; (40-x)/20, 20&lt;x&le;40; 0, x&gt;40</code></td></tr>
+        <tr><td>Sedang</td><td>20</td><td>40</td><td>60</td><td>80</td>
+            <td><code>(x-20)/20, 20&le;x&lt;40; 1, 40&le;x&le;60; (80-x)/20, 60&lt;x&le;80; 0, lain</code></td></tr>
+        <tr><td>Tinggi</td><td>60</td><td>80</td><td>120</td><td>120</td>
+            <td><code>(x-60)/20, 60&le;x&lt;80; 1, 80&le;x&le;120; 0, x&lt;60</code></td></tr>
+    </table>
+
+    <!-- 1.3 -->
+    <h3>1.3 Variabel Input: Kualitas Peringkat</h3>
+    <p>Domain: <strong>[1, 50]</strong> (semakin kecil nilai, semakin baik peringkat)</p>
+    <table>
+        <tr><th>Himpunan</th><th>a</th><th>b</th><th>c</th><th>d</th><th>Rumus</th></tr>
+        <tr><td>Terbaik</td><td>1</td><td>1</td><td>3</td><td>5</td>
+            <td><code>1, 1&le;x&le;3; (5-x)/2, 3&lt;x&le;5; 0, x&gt;5</code></td></tr>
+        <tr><td>Mendekati</td><td>5</td><td>10</td><td>15</td><td>20</td>
+            <td><code>(x-5)/5, 5&le;x&lt;10; 1, 10&le;x&le;15; (20-x)/5, 15&lt;x&le;20; 0, lain</code></td></tr>
+        <tr><td>Jauh</td><td>15</td><td>20</td><td>50</td><td>50</td>
+            <td><code>(x-15)/5, 15&le;x&lt;20; 1, 20&le;x&le;50; 0, x&lt;15</code></td></tr>
+    </table>
+
+    <!-- 1.4 -->
+    <h3>1.4 Variabel Output: Skor Prestasi</h3>
+    <p>Domain: <strong>[0, 100]</strong></p>
+    <table>
+        <tr><th>Himpunan</th><th>a</th><th>b</th><th>c</th><th>d</th><th>Rumus</th></tr>
+        <tr><td>Kurang Berprestasi</td><td>0</td><td>0</td><td>20</td><td>35</td>
+            <td><code>1, 0&le;x&le;20; (35-x)/15, 20&lt;x&le;35; 0, x&gt;35</code></td></tr>
+        <tr><td>Cukup Berprestasi</td><td>20</td><td>35</td><td>45</td><td>60</td>
+            <td><code>(x-20)/15, 20&le;x&lt;35; 1, 35&le;x&le;45; (60-x)/15, 45&lt;x&le;60; 0, lain</code></td></tr>
+        <tr><td>Berprestasi</td><td>45</td><td>60</td><td>70</td><td>85</td>
+            <td><code>(x-45)/15, 45&le;x&lt;60; 1, 60&le;x&le;70; (85-x)/15, 70&lt;x&le;85; 0, lain</code></td></tr>
+        <tr><td>Sangat Berprestasi</td><td>70</td><td>85</td><td>100</td><td>100</td>
+            <td><code>(x-70)/15, 70&le;x&lt;85; 1, 85&le;x&le;100; 0, x&lt;70</code></td></tr>
+    </table>
+
+    <hr class="section-divider">
+
+    <!-- ============================================================ -->
+    <!-- BAGIAN 2: RULE BASE -->
+    <!-- ============================================================ -->
+    <h2>2. Rule Base (27 Aturan Mamdani)</h2>
+    <p>Metode inferensi: <strong>Min-Max</strong> (firing strength = min dari 3 antecedent, agregasi = max untuk tiap label output).</p>
+    <div style="max-height:500px; overflow-y:auto; border:1px solid #dcdde1; border-radius:6px;">
+    <table>
+        <tr><th>#</th><th>IF Jumlah</th><th>AND Poin</th><th>AND Peringkat</th><th>THEN Output</th></tr>
+        <tr><td>1</td><td>sedikit</td><td>rendah</td><td>jauh</td><td><span class="badge-red" style="padding:2px 8px;">Kurang Berprestasi</span></td></tr>
+        <tr><td>2</td><td>sedikit</td><td>rendah</td><td>mendekati</td><td><span class="badge-red" style="padding:2px 8px;">Kurang Berprestasi</span></td></tr>
+        <tr><td>3</td><td>sedikit</td><td>rendah</td><td>terbaik</td><td><span class="badge-orange" style="padding:2px 8px;">Cukup Berprestasi</span></td></tr>
+        <tr><td>4</td><td>sedikit</td><td>sedang</td><td>jauh</td><td><span class="badge-red" style="padding:2px 8px;">Kurang Berprestasi</span></td></tr>
+        <tr><td>5</td><td>sedikit</td><td>sedang</td><td>mendekati</td><td><span class="badge-orange" style="padding:2px 8px;">Cukup Berprestasi</span></td></tr>
+        <tr><td>6</td><td>sedikit</td><td>sedang</td><td>terbaik</td><td><span class="badge-orange" style="padding:2px 8px;">Cukup Berprestasi</span></td></tr>
+        <tr><td>7</td><td>sedikit</td><td>tinggi</td><td>jauh</td><td><span class="badge-orange" style="padding:2px 8px;">Cukup Berprestasi</span></td></tr>
+        <tr><td>8</td><td>sedikit</td><td>tinggi</td><td>mendekati</td><td><span class="badge-orange" style="padding:2px 8px;">Cukup Berprestasi</span></td></tr>
+        <tr><td>9</td><td>sedikit</td><td>tinggi</td><td>terbaik</td><td><span class="badge-green" style="padding:2px 8px;">Berprestasi</span></td></tr>
+        <tr><td>10</td><td>sedang</td><td>rendah</td><td>jauh</td><td><span class="badge-red" style="padding:2px 8px;">Kurang Berprestasi</span></td></tr>
+        <tr><td>11</td><td>sedang</td><td>rendah</td><td>mendekati</td><td><span class="badge-orange" style="padding:2px 8px;">Cukup Berprestasi</span></td></tr>
+        <tr><td>12</td><td>sedang</td><td>rendah</td><td>terbaik</td><td><span class="badge-orange" style="padding:2px 8px;">Cukup Berprestasi</span></td></tr>
+        <tr><td>13</td><td>sedang</td><td>sedang</td><td>jauh</td><td><span class="badge-orange" style="padding:2px 8px;">Cukup Berprestasi</span></td></tr>
+        <tr><td>14</td><td>sedang</td><td>sedang</td><td>mendekati</td><td><span class="badge-green" style="padding:2px 8px;">Berprestasi</span></td></tr>
+        <tr><td>15</td><td>sedang</td><td>sedang</td><td>terbaik</td><td><span class="badge-green" style="padding:2px 8px;">Berprestasi</span></td></tr>
+        <tr><td>16</td><td>sedang</td><td>tinggi</td><td>jauh</td><td><span class="badge-green" style="padding:2px 8px;">Berprestasi</span></td></tr>
+        <tr><td>17</td><td>sedang</td><td>tinggi</td><td>mendekati</td><td><span class="badge-green" style="padding:2px 8px;">Berprestasi</span></td></tr>
+        <tr><td>18</td><td>sedang</td><td>tinggi</td><td>terbaik</td><td><span class="badge" style="background:#3498db;padding:2px 8px;">Sangat Berprestasi</span></td></tr>
+        <tr><td>19</td><td>banyak</td><td>rendah</td><td>jauh</td><td><span class="badge-orange" style="padding:2px 8px;">Cukup Berprestasi</span></td></tr>
+        <tr><td>20</td><td>banyak</td><td>rendah</td><td>mendekati</td><td><span class="badge-green" style="padding:2px 8px;">Berprestasi</span></td></tr>
+        <tr><td>21</td><td>banyak</td><td>rendah</td><td>terbaik</td><td><span class="badge-green" style="padding:2px 8px;">Berprestasi</span></td></tr>
+        <tr><td>22</td><td>banyak</td><td>sedang</td><td>jauh</td><td><span class="badge-green" style="padding:2px 8px;">Berprestasi</span></td></tr>
+        <tr><td>23</td><td>banyak</td><td>sedang</td><td>mendekati</td><td><span class="badge-green" style="padding:2px 8px;">Berprestasi</span></td></tr>
+        <tr><td>24</td><td>banyak</td><td>sedang</td><td>terbaik</td><td><span class="badge" style="background:#3498db;padding:2px 8px;">Sangat Berprestasi</span></td></tr>
+        <tr><td>25</td><td>banyak</td><td>tinggi</td><td>jauh</td><td><span class="badge-green" style="padding:2px 8px;">Berprestasi</span></td></tr>
+        <tr><td>26</td><td>banyak</td><td>tinggi</td><td>mendekati</td><td><span class="badge" style="background:#3498db;padding:2px 8px;">Sangat Berprestasi</span></td></tr>
+        <tr><td>27</td><td>banyak</td><td>tinggi</td><td>terbaik</td><td><span class="badge" style="background:#3498db;padding:2px 8px;">Sangat Berprestasi</span></td></tr>
+    </table>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ============================================================ -->
+    <!-- BAGIAN 3: ERD -->
+    <!-- ============================================================ -->
+    <h2>3. ERD — Relasi Tabel <code>fuzzy_klasifikasi</code></h2>
+    <p>Tabel <code>fuzzy_klasifikasi</code> menyimpan hasil perhitungan fuzzy tiap mahasiswa. Relasi <strong>one-to-one</strong> ke <code>mahasiswa_tabel</code> melalui foreign key <code>NIM</code>.</p>
+
+    <div class="diagram-container">
+        <div class="mermaid">
+erDiagram
+    mahasiswa_tabel ||--o| fuzzy_klasifikasi : memiliki
+    mahasiswa_tabel {
+        string NIM PK
+        string nama
+        string fakultas
+        string prodi
+        string tempat_lahir
+        date tanggal_lahir
+        string jenis_kelamin
+        string email
+        string no_telepon
+        string alamat
+        string agama
+        string kewarganegaraan
+        string golongan_darah
+        string status_pernikahan
+        string status_aktif
+        timestamp created_at
+        timestamp updated_at
+    }
+    fuzzy_klasifikasi {
+        int id PK
+        string NIM FK
+        tinyint jumlah_prestasi
+        smallint total_poin
+        tinyint peringkat_terbaik
+        decimal skor_fuzzy
+        string label_fuzzy
+        timestamp created_at
+        timestamp updated_at
+    }
+        </div>
+    </div>
+    <p style="font-size:13px;color:#636e72;"><strong>Struktur tabel <code>fuzzy_klasifikasi</code>:</strong></p>
+    <table>
+        <tr><th>Kolom</th><th>Tipe</th><th>Keterangan</th></tr>
+        <tr><td>id</td><td>int (PK)</td><td>Auto increment</td></tr>
+        <tr><td>NIM</td><td>string(20) (FK)</td><td>&rarr; mahasiswa_tabel.NIM, cascade delete/update</td></tr>
+        <tr><td>jumlah_prestasi</td><td>tinyint unsigned</td><td>Jumlah pendaftaran disetujui</td></tr>
+        <tr><td>total_poin</td><td>smallint unsigned</td><td>Total bobot poin</td></tr>
+        <tr><td>peringkat_terbaik</td><td>tinyint unsigned</td><td>Peringkat terendah (terbaik)</td></tr>
+        <tr><td>skor_fuzzy</td><td>decimal(5,2)</td><td>Hasil defuzzifikasi centroid</td></tr>
+        <tr><td>label_fuzzy</td><td>varchar(50)</td><td>Label hasil klasifikasi</td></tr>
+        <tr><td>created_at / updated_at</td><td>timestamp</td><td>Timestamps</td></tr>
+    </table>
+
+    <hr class="section-divider">
+
+    <!-- ============================================================ -->
+    <!-- BAGIAN 4: FLOWCHART -->
+    <!-- ============================================================ -->
+    <h2>4. Flowchart — Alur Logika Program</h2>
+    <p>Proses dari input data mahasiswa hingga menghasilkan output fuzzy di dashboard.</p>
+
+    <div class="diagram-container">
+        <div class="mermaid">
+flowchart TD
+    A([Mulai]) --> B[User akses halaman dashboard]
+    B --> C[Route / dashboard<br>memanggil FuzzyPrestasiService]
+    C --> D[classifyAll: ambil<br>semua mahasiswa dari DB]
+    D --> E[Loop tiap mahasiswa]
+    E --> F[classify(NIM)]
+
+    subgraph fuzzy[Proses Fuzzy Satu Mahasiswa]
+        F --> G[Ambil pendaftaran_prestasi<br>status=disetujui]
+        G --> H[Hitung jumlah_prestasi]
+        H --> I{jumlah_prestasi == 0?}
+        I -- Ya --> J[Return skor=0<br>label='Tidak Ada Data']
+        I -- Tidak --> K[Akumulasi total_poin<br>dari bobot_referensi]
+        K --> L[Cari peringkat_terbaik<br>dari capaian_prestasi]
+        L --> M[Fuzzifikasi:<br>3 input &rarr; derajat fuzzy]
+        M --> N[Evaluasi 27 rules:<br>min antecedent &rarr; firing strength]
+        N --> O[Agregasi:<br>max tiap label output]
+        O --> P[Defuzzifikasi centroid:<br>skor = sum(x*mu)/sum(mu)]
+        P --> Q[Tentukan label dari skor:<br>0-25 / 26-50 / 51-75 / 76-100]
+        Q --> R[Return array:<br>NIM, skor, label, dll]
+    end
+
+    R --> S[Simpan ke array results]
+    S --> T{Mahasiswa berikutnya?}
+    T -- Ya --> E
+    T -- Tidak --> U[Sort results by skor DESC]
+    U --> V[Controller passing data<br>ke view welcome.blade.php]
+    V --> W[Tampilkan tabel klasifikasi<br>+ summary boxes + top 10 chart]
+    W --> X([Selesai])
+        </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ============================================================ -->
+    <!-- BAGIAN 5: ALUR LOGIKA -->
+    <!-- ============================================================ -->
+    <h2>5. Alur Logika Program (Penjelasan)</h2>
+
+    <h3>5.1 Struktur File</h3>
+    <table>
+        <tr><th>File</th><th>Fungsi</th></tr>
+        <tr><td><code>app/Services/FuzzyPrestasiService.php</code></td><td>Inti logika fuzzy: fuzzifikasi, rule evaluation, defuzzifikasi, classifyAll</td></tr>
+        <tr><td><code>app/Http/Controllers/FuzzyKlasifikasiController.php</code></td><td>CRUD untuk tabel fuzzy_klasifikasi</td></tr>
+        <tr><td><code>app/Console/Commands/SeedFuzzyKlasifikasi.php</code></td><td>Artisan command <code>seed:fuzzy-klasifikasi</code></td></tr>
+        <tr><td><code>app/Models/FuzzyKlasifikasi.php</code></td><td>Model Eloquent (belongsTo Mahasiswa)</td></tr>
+        <tr><td><code>database/migrations/..._create_fuzzy_klasifikasi_table.php</code></td><td>Migration tabel penyimpanan hasil fuzzy</td></tr>
+        <tr><td><code>routes/web.php</code></td><td>Route <code>/</code> (dashboard), <code>/fuzzy-klasifikasi</code>, <code>/fuzzy-grafik</code></td></tr>
+    </table>
+
+    <h3>5.2 Alur Lengkap</h3>
+    <ol>
+        <li><strong>Input Data</strong> &mdash; Admin/Operator mengisi data mahasiswa, referensi kejuaraan, pendaftaran prestasi, dan capaian prestasi melalui CRUD module masing-masing.</li>
+        <li><strong>Trigger Klasifikasi</strong> &mdash; Saat user mengakses halaman dashboard (<code>/</code>), route memanggil <code>FuzzyPrestasiService::classifyAll()</code>.</li>
+        <li><strong>Ambil Data</strong> &mdash; Service mengambil seluruh mahasiswa dari DB, lalu untuk tiap mahasiswa:
+            <ul>
+                <li>Filter pendaftaran prestasi yang statusnya <strong>disetujui</strong></li>
+                <li>Hitung jumlah prestasi, total poin (dari bobot_referensi), dan peringkat terbaik (dari capaian_prestasi)</li>
+            </ul>
+        </li>
+        <li><strong>Fuzzifikasi</strong> &mdash; Tiap input diubah ke derajat keanggotaan [0, 1] menggunakan fungsi trapezoid.</li>
+        <li><strong>Inferensi</strong> &mdash; 27 rules dievaluasi dengan operator <strong>AND = min</strong>, menghasilkan firing strength untuk tiap rule. Agregasi tiap label output menggunakan <strong>MAX</strong>.</li>
+        <li><strong>Defuzzifikasi</strong> &mdash; Metode <strong>Centroid</strong>:
+            <div class="formula-box">skor = &Sigma;(x &middot; &mu;(x)) / &Sigma;(&mu;(x)), &nbsp; x = 0 s.d. 100 step 0.5</div>
+            dimana &mu;(x) = max(min(firingStrength<sub>label</sub>, &mu;<sub>output_label</sub>(x))) untuk semua label.
+        </li>
+        <li><strong>Penentuan Label</strong> berdasarkan skor:
+            <ul>
+                <li>0 &ndash; 25 &rarr; <span class="badge-red" style="padding:2px 8px;">Kurang Berprestasi</span></li>
+                <li>26 &ndash; 50 &rarr; <span class="badge-orange" style="padding:2px 8px;">Cukup Berprestasi</span></li>
+                <li>51 &ndash; 75 &rarr; <span class="badge-green" style="padding:2px 8px;">Berprestasi</span></li>
+                <li>76 &ndash; 100 &rarr; <span class="badge" style="background:#3498db;padding:2px 8px;">Sangat Berprestasi</span></li>
+            </ul>
+        </li>
+        <li><strong>Output</strong> &mdash; Hasil dikembalikan ke view dashboard dalam bentuk array yang sudah diurutkan DESC berdasarkan skor, lalu ditampilkan sebagai tabel klasifikasi, summary boxes, dan grafik bar chart Top 10.</li>
+        <li><strong>Penyimpanan</strong> (opsional) &mdash; Command <code>seed:fuzzy-klasifikasi</code> dapat dijalankan untuk menyimpan hasil ke tabel <code>fuzzy_klasifikasi</code> untuk keperluan pelaporan.</li>
+    </ol>
+
+    <hr class="section-divider">
+
+    <!-- ============================================================ -->
+    <!-- BAGIAN 6: CONTOH MANUAL -->
+    <!-- ============================================================ -->
+    <h2>6. Contoh Perhitungan Manual</h2>
+    <p><strong>Mahasiswa:</strong> HALIS ANNISA (NIM 2455201110003)</p>
+
+    <h3>Data</h3>
+    <table>
+        <tr><th>Input</th><th>Nilai</th></tr>
+        <tr><td>Jumlah prestasi disetujui</td><td>3</td></tr>
+        <tr><td>Total poin</td><td>28</td></tr>
+        <tr><td>Peringkat terbaik</td><td>1</td></tr>
+    </table>
+
+    <h3>6.1 Fuzzifikasi</h3>
+
+    <p><strong>Jumlah Prestasi (x = 3):</strong></p>
+    <table>
+        <tr><th>Himpunan</th><th>Perhitungan</th><th>&mu;</th></tr>
+        <tr><td>Sedikit</td><td>trap(3; 0,0,2,3) &rarr; x pada (c,d] &rarr; (3-3)/(3-2) = 0/1</td><td><strong>0</strong></td></tr>
+        <tr><td>Sedang</td><td>trap(3; 2,3,5,6) &rarr; x pada [b,c] &rarr; 1</td><td><strong>1</strong></td></tr>
+        <tr><td>Banyak</td><td>trap(3; 5,6,10,10) &rarr; x &lt; a &rarr; 0</td><td><strong>0</strong></td></tr>
+    </table>
+
+    <p><strong>Total Poin (x = 28):</strong></p>
+    <table>
+        <tr><th>Himpunan</th><th>Perhitungan</th><th>&mu;</th></tr>
+        <tr><td>Rendah</td><td>trap(28; 0,0,20,40) &rarr; x pada (c,d] &rarr; (40-28)/20</td><td><strong>0.6</strong></td></tr>
+        <tr><td>Sedang</td><td>trap(28; 20,40,60,80) &rarr; x pada [a,b) &rarr; (28-20)/20</td><td><strong>0.4</strong></td></tr>
+        <tr><td>Tinggi</td><td>trap(28; 60,80,120,120) &rarr; x &lt; a &rarr; 0</td><td><strong>0</strong></td></tr>
+    </table>
+
+    <p><strong>Kualitas Peringkat (x = 1):</strong></p>
+    <table>
+        <tr><th>Himpunan</th><th>Perhitungan</th><th>&mu;</th></tr>
+        <tr><td>Terbaik</td><td>trap(1; 1,1,3,5) &rarr; x pada [a,b] &rarr; 1</td><td><strong>1</strong></td></tr>
+        <tr><td>Mendekati</td><td>trap(1; 5,10,15,20) &rarr; x &lt; a &rarr; 0</td><td><strong>0</strong></td></tr>
+        <tr><td>Jauh</td><td>trap(1; 15,20,50,50) &rarr; x &lt; a &rarr; 0</td><td><strong>0</strong></td></tr>
+    </table>
+
+    <h3>6.2 Rule Evaluation</h3>
+    <p>Dari 27 rules, hanya 2 yang aktif:</p>
+    <table>
+        <tr><th>#</th><th>Rule</th><th>min</th><th>Output</th></tr>
+        <tr><td>12</td><td>sedang + rendah + terbaik</td><td>min(1, 0.6, 1) = <strong>0.6</strong></td><td>Cukup Berprestasi</td></tr>
+        <tr><td>15</td><td>sedang + sedang + terbaik</td><td>min(1, 0.4, 1) = <strong>0.4</strong></td><td>Berprestasi</td></tr>
+    </table>
+    <p><strong>Agregasi (MAX):</strong> {Kurang: 0, Cukup: <strong>0.6</strong>, Berprestasi: <strong>0.4</strong>, Sangat: 0}</p>
+
+    <h3>6.3 Defuzzifikasi (Centroid)</h3>
+    <p>Output trapezoid: Cukup (20, 35, 45, 60) strength 0.6, Berprestasi (45, 60, 70, 85) strength 0.4.</p>
+    <p>Perhitungan dari x = 0 sampai 100 step 0.5:</p>
+    <div class="formula-box">
+&mu;(x) = max( min(0.6, &mu;cukup(x)), min(0.4, &mu;berprestasi(x)) )<br><br>
+skor = &Sigma;(x &middot; &mu;(x)) / &Sigma;(&mu;(x)) = <strong>40</strong>
+    </div>
+
+    <h3>6.4 Penentuan Label</h3>
+    <p>Skor 40 berada pada rentang <strong>26 &ndash; 50</strong> &rarr; <span class="badge-orange" style="padding:2px 10px;font-size:14px;">Cukup Berprestasi</span></p>
+
+    <hr class="section-divider">
+
+    <p style="text-align:center; color:#636e72; font-size:13px;">
+        &copy; 2026 &mdash; Sistem Pendukung Keputusan Klasifikasi Prestasi Mahasiswa &mdash; Metode Fuzzy Mamdani
+    </p>
+
+</div>
+
+<script>
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        themeVariables: {
+            primaryColor: '#3498db',
+            primaryTextColor: '#fff',
+            primaryBorderColor: '#2980b9',
+            lineColor: '#2c3e50',
+            secondaryColor: '#ecf0f1',
+            tertiaryColor: '#f5f6fa'
+        },
+        flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true,
+            curve: 'basis',
+            padding: 12
+        },
+        er: {
+            useMaxWidth: true,
+            layoutDirection: 'TB'
+        }
+    });
+</script>
+
+</body>
+</html>
