@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\MahasiswaController;
 use App\Http\Controllers\Api\DosenController;
 use App\Http\Controllers\Api\MataKuliahController;
@@ -15,6 +16,14 @@ use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\UserController;
 
 Route::name('api.')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+});
+
+Route::middleware('auth:sanctum')->name('api.')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/me', [AuthController::class, 'me']);
+
     Route::apiResource('mahasiswa', MahasiswaController::class);
     Route::apiResource('dosen', DosenController::class);
     Route::apiResource('mata-kuliah', MataKuliahController::class);
