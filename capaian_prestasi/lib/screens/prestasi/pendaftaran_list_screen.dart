@@ -66,7 +66,17 @@ class _PendaftaranListScreenState extends State<PendaftaranListScreen> {
               return Card(
                 child: ListTile(
                   title: Text(item.namaKegiatan),
-                  subtitle: Text('ID: ${item.pendaftaranId}'),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (item.namaMahasiswa != null)
+                        Text('Mahasiswa: ${item.namaMahasiswa}'),
+                      if (item.namaKejuaraan != null)
+                        Text('Kejuaraan: ${item.namaKejuaraan}'),
+                      Text('Status: ${_statusLabel(item.status)}'),
+                    ],
+                  ),
+                  isThreeLine: true,
                   trailing: Chip(
                     label: Text(
                       _statusLabel(item.status),

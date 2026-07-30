@@ -13,7 +13,11 @@ class CapaianPrestasiController extends Controller
 {
     public function index(Request $request)
     {
-        $query = CapaianPrestasi::latest();
+        $query = CapaianPrestasi::latest()->with([
+            'pendaftaranPrestasi.mahasiswa',
+            'pendaftaranPrestasi.referensiKejuaraan',
+            'dosen'
+        ]);
         if ($request->has('nim')) {
             $query->whereHas('pendaftaranPrestasi', function ($q) use ($request) {
                 $q->where('NIM', $request->nim);

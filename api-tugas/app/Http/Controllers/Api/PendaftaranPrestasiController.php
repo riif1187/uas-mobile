@@ -13,7 +13,10 @@ class PendaftaranPrestasiController extends Controller
 {
     public function index(Request $request)
     {
-        $query = PendaftaranPrestasi::latest();
+        $query = PendaftaranPrestasi::latest()->with([
+            'mahasiswa',
+            'referensiKejuaraan',
+        ]);
         if ($request->has('nim')) {
             $query->where('NIM', $request->nim);
         }

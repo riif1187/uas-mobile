@@ -13,6 +13,7 @@ class CapaianCreateScreen extends StatefulWidget {
 
 class _CapaianCreateScreenState extends State<CapaianCreateScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _nimController = TextEditingController();
   final _pendaftaranIdController = TextEditingController();
   final _peringkatController = TextEditingController();
   final _nipController = TextEditingController();
@@ -20,7 +21,19 @@ class _CapaianCreateScreenState extends State<CapaianCreateScreen> {
   final _picker = ImagePicker();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final nim = context.read<AuthProvider>().nim;
+      if (nim != null) {
+        _nimController.text = nim;
+      }
+    });
+  }
+
+  @override
   void dispose() {
+    _nimController.dispose();
     _pendaftaranIdController.dispose();
     _peringkatController.dispose();
     _nipController.dispose();
@@ -37,14 +50,12 @@ class _CapaianCreateScreenState extends State<CapaianCreateScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final nim = context.read<AuthProvider>().nim;
-
     await context.read<PrestasiProvider>().createCapaian(
       pendaftaranId: _pendaftaranIdController.text.trim(),
       peringkat: _peringkatController.text.trim(),
       nip: _nipController.text.trim(),
       filePath: _filePath,
-      nim: nim,
+      nim: _nimController.text.trim(),
     );
 
     if (!mounted) return;
@@ -61,6 +72,16 @@ class _CapaianCreateScreenState extends State<CapaianCreateScreen> {
           key: _formKey,
           child: Column(
             children: [
+              TextFormField(
+                controller: _nimController,
+                decoration: const InputDecoration(
+                  labelText: 'NIM',
+                  prefixIcon: Icon(Icons.badge),
+                  border: OutlineInputBorder(),
+                ),
+                validator: (v) => v == null || v.isEmpty ? 'NIM wajib diisi' : null,
+              ),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _pendaftaranIdController,
                 decoration: const InputDecoration(

@@ -12,6 +12,7 @@ class PendaftaranCreateScreen extends StatefulWidget {
 
 class _PendaftaranCreateScreenState extends State<PendaftaranCreateScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _nimController = TextEditingController();
   final _kegiatanController = TextEditingController();
   String? _selectedRefId;
 
@@ -19,12 +20,17 @@ class _PendaftaranCreateScreenState extends State<PendaftaranCreateScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      final nim = context.read<AuthProvider>().nim;
+      if (nim != null) {
+        _nimController.text = nim;
+      }
       context.read<PrestasiProvider>().loadReferensi();
     });
   }
 
   @override
   void dispose() {
+    _nimController.dispose();
     _kegiatanController.dispose();
     super.dispose();
   }
@@ -32,17 +38,8 @@ class _PendaftaranCreateScreenState extends State<PendaftaranCreateScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final auth = context.read<AuthProvider>();
-    final nim = auth.nim;
-    if (nim == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Data mahasiswa tidak ditemukan. Isi profil terlebih dahulu.')),
-      );
-      return;
-    }
-
     await context.read<PrestasiProvider>().createPendaftaran({
-      'NIM': nim,
+      'NIM': _nimController.text.trim(),
       'ref_id': _selectedRefId,
       'nama_kegiatan': _kegiatanController.text.trim(),
     });
@@ -63,6 +60,16 @@ class _PendaftaranCreateScreenState extends State<PendaftaranCreateScreen> {
               key: _formKey,
               child: Column(
                 children: [
+                  TextFormField(
+                    controller: _nimController,
+                    decoration: const InputDecoration(
+                      labelText: 'NIM',
+                      prefixIcon: Icon(Icons.badge),
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (v) => v == null || v.isEmpty ? 'NIM wajib diisi' : null,
+                  ),
+                  const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
                     decoration: const InputDecoration(
                       labelText: 'Pilih Kejuaraan',
