@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:dio/dio.dart';
 import '../../config/api_config.dart';
 import '../../models/auth/user.dart';
@@ -61,7 +62,16 @@ class AuthService {
 
   Future<User> getMe() async {
     final response = await _apiService.dio.get(ApiConfig.me);
-    return User.fromJson(response.data['user']);
+    final userData = response.data?['user'];
+    if (userData is! Map<String, dynamic>) {
+      throw Exception('Format data user tidak valid');
+    }
+    try {
+      return User.fromJson(userData);
+    } catch (e) {
+      developer.log('User.fromJson error: $e');
+      throw Exception('Gagal memproses data user');
+    }
   }
 
   Future<Map<String, dynamic>> getMahasiswaByEmail(String email) async {

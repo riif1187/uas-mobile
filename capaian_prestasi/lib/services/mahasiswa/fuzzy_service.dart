@@ -19,4 +19,16 @@ class FuzzyService {
       rethrow;
     }
   }
+
+  Future<FuzzyKlasifikasi?> refreshByNim(String nim) async {
+    try {
+      final response = await _apiService.dio.post(
+        '${ApiConfig.mahasiswa}/$nim/fuzzy/refresh',
+      );
+      return FuzzyKlasifikasi.fromJson(response.data['data']);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) return null;
+      rethrow;
+    }
+  }
 }

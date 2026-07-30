@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateMahasiswaRequest;
 use App\Http\Resources\MahasiswaResource;
 use App\Models\FuzzyKlasifikasi;
 use App\Models\Mahasiswa;
+use App\Services\FuzzyPrestasiService;
 
 class MahasiswaController extends Controller
 {
@@ -70,5 +71,41 @@ class MahasiswaController extends Controller
         $mahasiswa = Mahasiswa::findOrFail($NIM);
         $mahasiswa->delete();
         return response()->json(['message' => 'Data berhasil dihapus'], 200);
+    }
+
+    public function fuzzyRefresh($nim)
+    {
+        $service = app(FuzzyPrestasiService::class);
+        $result = $service->classify($nim);
+
+        if (!$result) {
+            return response()->json(['message' => 'Mahasiswa tidak ditemukan'], 404);
+        }
+
+        FuzzyKlasifikasi::updateOrCreate(
+            ['NIM' => $nim],
+            [
+                'jumlah_prestasi'   => $result['jumlah_prestasi'],
+                'total_poin'        => $result['total_poin'],
+                'peringkat_terbaik' => $result['peringkat_terbaik'],
+                'skor_fuzzy'        => $result['skor'],
+                'label_fuzzy'       => $result['label'],
+            ]
+        );
+
+        $fuzzy = FuzzyKlasifikasi::where('NIM', $nim)->first();
+
+        return response()->json([
+            'data' => [
+                'id'                => $fuzzy->id,
+                'NIM'               => $fuzzy->NIM,
+                'jumlah_prestasi'   => $fuzzy->jumlah_prestasi,
+                'total_poin'        => $fuzzy->total_poin,
+                'peringkat_terbaik' => $fuzzy->peringkat_terbaik,
+                'skor_fuzzy'        => $fuzzy->skor_fuzzy,
+                'label_fuzzy'       => $fuzzy->label_fuzzy,
+            ],
+            'message' => 'Klasifikasi berhasil diperbarui',
+        ]);
     }
 }

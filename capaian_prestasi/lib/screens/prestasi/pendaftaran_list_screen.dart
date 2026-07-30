@@ -65,10 +65,15 @@ class _PendaftaranListScreenState extends State<PendaftaranListScreen> {
               final item = provider.pendaftaran[i];
               return Card(
                 child: ListTile(
+                  onTap: () => Navigator.of(context).pushNamed(
+                    '/capaian-create',
+                    arguments: {'pendaftaran_id': item.pendaftaranId},
+                  ),
                   title: Text(item.namaKegiatan),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text('ID: ${item.pendaftaranId}'),
                       if (item.namaMahasiswa != null)
                         Text('Mahasiswa: ${item.namaMahasiswa}'),
                       if (item.namaKejuaraan != null)

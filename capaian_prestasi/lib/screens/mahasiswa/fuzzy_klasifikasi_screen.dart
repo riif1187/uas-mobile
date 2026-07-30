@@ -1,9 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/mahasiswa_provider.dart';
 
-class FuzzyKlasifikasiScreen extends StatelessWidget {
+class FuzzyKlasifikasiScreen extends StatefulWidget {
   const FuzzyKlasifikasiScreen({super.key});
+
+  @override
+  State<FuzzyKlasifikasiScreen> createState() => _FuzzyKlasifikasiScreenState();
+}
+
+class _FuzzyKlasifikasiScreenState extends State<FuzzyKlasifikasiScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final nim = context.read<AuthProvider>().nim;
+      if (nim != null) {
+        context.read<MahasiswaProvider>().refreshFuzzy(nim);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

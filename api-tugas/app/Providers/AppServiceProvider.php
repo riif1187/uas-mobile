@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Models\User;
 use App\Models\Permission;
 
+
 class AppServiceProvider extends ServiceProvider
 {
     /**

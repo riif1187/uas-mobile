@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/mahasiswa_provider.dart';
 import '../../providers/prestasi_provider.dart';
 
 class PendaftaranCreateScreen extends StatefulWidget {
@@ -38,13 +39,16 @@ class _PendaftaranCreateScreenState extends State<PendaftaranCreateScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
+    final nim = _nimController.text.trim();
+
     await context.read<PrestasiProvider>().createPendaftaran({
-      'NIM': _nimController.text.trim(),
+      'NIM': nim,
       'ref_id': _selectedRefId,
       'nama_kegiatan': _kegiatanController.text.trim(),
     });
 
     if (!mounted) return;
+    context.read<MahasiswaProvider>().refreshFuzzy(nim);
     Navigator.pop(context);
   }
 

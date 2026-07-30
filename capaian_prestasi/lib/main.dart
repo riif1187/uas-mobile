@@ -4,6 +4,7 @@ import 'providers/auth_provider.dart';
 import 'providers/mahasiswa_provider.dart';
 import 'providers/prestasi_provider.dart';
 import 'providers/bimbingan_provider.dart';
+import 'providers/dosen_provider.dart';
 import 'services/auth/api_service.dart';
 import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => MahasiswaProvider(apiService)),
         ChangeNotifierProvider(create: (_) => PrestasiProvider(apiService)),
         ChangeNotifierProvider(create: (_) => BimbinganProvider(apiService)),
+        ChangeNotifierProvider(create: (_) => DosenProvider(apiService)),
       ],
       child: MaterialApp(
         title: 'Prestasi Mahasiswa',

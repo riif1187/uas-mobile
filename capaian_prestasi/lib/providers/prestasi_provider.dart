@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../models/prestasi/referensi_kejuaraan.dart';
 import '../models/prestasi/pendaftaran_prestasi.dart';
 import '../models/prestasi/capaian_prestasi.dart';
@@ -19,9 +20,9 @@ class PrestasiProvider extends ChangeNotifier {
   String? _error;
 
   PrestasiProvider(ApiService apiService)
-      : _referensiService = ReferensiService(apiService),
-        _pendaftaranService = PendaftaranService(apiService),
-        _capaianService = CapaianService(apiService);
+    : _referensiService = ReferensiService(apiService),
+      _pendaftaranService = PendaftaranService(apiService),
+      _capaianService = CapaianService(apiService);
 
   List<ReferensiKejuaraan> get referensi => _referensi;
   List<PendaftaranPrestasi> get pendaftaran => _pendaftaran;
@@ -90,11 +91,11 @@ class PrestasiProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> createCapaian({
+  Future<bool> createCapaian({
     required String pendaftaranId,
     required String peringkat,
     required String nip,
-    String? filePath,
+    XFile? file,
     String? nim,
   }) async {
     _isLoading = true;
@@ -106,11 +107,13 @@ class PrestasiProvider extends ChangeNotifier {
         pendaftaranId: pendaftaranId,
         peringkat: peringkat,
         nip: nip,
-        filePath: filePath,
+        file: file,
       );
       await loadCapaian(nim: nim);
+      return true;
     } catch (e) {
       _error = e.toString().replaceFirst('Exception: ', '');
+      return false;
     } finally {
       _isLoading = false;
       notifyListeners();

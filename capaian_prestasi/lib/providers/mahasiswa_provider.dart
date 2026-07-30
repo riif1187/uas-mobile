@@ -58,6 +58,15 @@ class MahasiswaProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> refreshFuzzy(String nim) async {
+    try {
+      _fuzzy = await _fuzzyService.refreshByNim(nim);
+      notifyListeners();
+    } catch (e) {
+      // silent — fuzzy refresh is best-effort
+    }
+  }
+
   void setDataLengkap(List<DataLengkapMahasiswa> data) {
     _dataLengkap = data;
     notifyListeners();

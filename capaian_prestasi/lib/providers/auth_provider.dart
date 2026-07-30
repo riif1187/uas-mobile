@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import '../models/auth/user.dart';
 import '../services/auth/api_service.dart';
@@ -24,10 +25,16 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
+      debugPrint('LOGIN: calling _authService.login()');
       await _authService.login(email, password);
+      debugPrint('LOGIN: login OK, calling loadUser()');
       await loadUser();
+      debugPrint('LOGIN: loadUser OK, calling _fetchNim()');
       await _fetchNim(email);
-    } catch (e) {
+      debugPrint('LOGIN: login flow complete');
+    } catch (e, stack) {
+      debugPrint('LOGIN ERROR: $e');
+      debugPrint('LOGIN STACK: $stack');
       _error = e.toString().replaceFirst('Exception: ', '');
     } finally {
       _isLoading = false;
@@ -63,12 +70,19 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> clearError() {
+    _error = null;
+    notifyListeners();
+    return Future.value();
+  }
+
   Future<void> loadUser() async {
     try {
       _user = await _authService.getMe();
       notifyListeners();
-    } catch (_) {
+    } catch (e) {
       _user = null;
+      _error = e.toString().replaceFirst('Exception: ', '');
       notifyListeners();
     }
   }

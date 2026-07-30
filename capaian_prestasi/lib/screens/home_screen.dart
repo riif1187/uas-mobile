@@ -1,14 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+import '../providers/mahasiswa_provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final nim = context.read<AuthProvider>().nim;
+      if (nim != null) {
+        context.read<MahasiswaProvider>().refreshFuzzy(nim);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
     final user = auth.user;
+    final fuzzy = context.watch<MahasiswaProvider>().fuzzy;
 
     return Scaffold(
       appBar: AppBar(
@@ -32,7 +50,27 @@ class HomeScreen extends StatelessWidget {
           children: [
             Text('Selamat datang, ${user?.name ?? "Mahasiswa"}',
                 style: Theme.of(context).textTheme.headlineSmall),
-            const SizedBox(height: 24),
+            const SizedBox(height: 8),
+            if (fuzzy != null)
+              Card(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Row(
+                    children: [
+                      Icon(Icons.auto_graph, color: Theme.of(context).colorScheme.primary),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'Skor Fuzzy: ${fuzzy.skorFuzzy.toStringAsFixed(1)} — ${fuzzy.labelFuzzy}',
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            const SizedBox(height: 16),
             Expanded(
               child: GridView.count(
                 crossAxisCount: 2,
