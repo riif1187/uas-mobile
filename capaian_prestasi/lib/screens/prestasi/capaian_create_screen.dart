@@ -90,110 +90,207 @@ class _CapaianCreateScreenState extends State<CapaianCreateScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Tambah Capaian')),
+      appBar: AppBar(
+        title: const Text('Tambah Capaian'),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF1A237E), Color(0xFF3949AB)],
+            ),
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
-                controller: _nimController,
-                decoration: const InputDecoration(
-                  labelText: 'NIM',
-                  prefixIcon: Icon(Icons.badge),
-                  border: OutlineInputBorder(),
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.indigo.withOpacity(0.06),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                validator: (v) =>
-                    v == null || v.isEmpty ? 'NIM wajib diisi' : null,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _pendaftaranIdController,
-                decoration: const InputDecoration(
-                  labelText: 'ID Pendaftaran',
-                  helperText: 'Pilih dari daftar pendaftaran atau isi manual',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (v) => v == null || v.isEmpty
-                    ? 'ID Pendaftaran wajib diisi'
-                    : null,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _peringkatController,
-                decoration: const InputDecoration(
-                  labelText: 'Peringkat',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (v) =>
-                    v == null || v.isEmpty ? 'Peringkat wajib diisi' : null,
-              ),
-              const SizedBox(height: 16),
-              Consumer<DosenProvider>(
-                builder: (_, dosenProvider, __) {
-                  if (dosenProvider.isLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (dosenProvider.dosen.isEmpty) {
-                    return TextFormField(
-                      controller: TextEditingController(text: _selectedNip),
-                      decoration: const InputDecoration(
-                        labelText: 'NIP Dosen',
-                        border: OutlineInputBorder(),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _nimController,
+                      decoration: InputDecoration(
+                        labelText: 'NIM',
+                        prefixIcon: const Icon(Icons.badge_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey.shade50,
                       ),
-                      onChanged: (v) => _selectedNip = v,
-                      validator: (v) => v == null || v.isEmpty
-                          ? 'NIP Dosen wajib diisi'
-                          : null,
-                    );
-                  }
-                  return DropdownButtonFormField<String>(
-                    decoration: const InputDecoration(
-                      labelText: 'Pilih Dosen',
-                      border: OutlineInputBorder(),
+                      validator: (v) =>
+                          v == null || v.isEmpty ? 'NIM wajib diisi' : null,
                     ),
-                    items: dosenProvider.dosen.map((d) {
-                      return DropdownMenuItem(
-                        value: d.nip,
-                        child: Text('${d.nama} (${d.nip})'),
-                      );
-                    }).toList(),
-                    onChanged: (v) => _selectedNip = v,
-                    validator: (v) =>
-                        v == null ? 'Pilih dosen pembimbing' : null,
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: _pickFile,
-                      icon: const Icon(Icons.upload_file),
-                      label: Text(
-                        _file != null ? 'File dipilih' : 'Upload Bukti',
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _pendaftaranIdController,
+                      decoration: InputDecoration(
+                        labelText: 'ID Pendaftaran',
+                        helperText: 'Pilih dari daftar pendaftaran atau isi manual',
+                        prefixIcon: const Icon(Icons.assignment_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey.shade50,
+                      ),
+                      validator: (v) =>
+                          v == null || v.isEmpty ? 'ID Pendaftaran wajib diisi' : null,
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _peringkatController,
+                      decoration: InputDecoration(
+                        labelText: 'Peringkat',
+                        prefixIcon: const Icon(Icons.stars_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey.shade50,
+                      ),
+                      validator: (v) =>
+                          v == null || v.isEmpty ? 'Peringkat wajib diisi' : null,
+                    ),
+                    const SizedBox(height: 16),
+                    Consumer<DosenProvider>(
+                      builder: (_, dosenProvider, __) {
+                        if (dosenProvider.isLoading) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+                        if (dosenProvider.dosen.isEmpty) {
+                          return TextFormField(
+                            controller: TextEditingController(text: _selectedNip),
+                            decoration: InputDecoration(
+                              labelText: 'NIP Dosen',
+                              prefixIcon: const Icon(Icons.school_outlined),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey.shade50,
+                            ),
+                            onChanged: (v) => _selectedNip = v,
+                            validator: (v) =>
+                                v == null || v.isEmpty ? 'NIP Dosen wajib diisi' : null,
+                          );
+                        }
+                        return DropdownButtonFormField<String>(
+                          decoration: InputDecoration(
+                            labelText: 'Pilih Dosen',
+                            prefixIcon: const Icon(Icons.school_outlined),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey.shade50,
+                          ),
+                          items: dosenProvider.dosen.map((d) {
+                            return DropdownMenuItem(
+                              value: d.nip,
+                              child: Text('${d.nama} (${d.nip})'),
+                            );
+                          }).toList(),
+                          onChanged: (v) => _selectedNip = v,
+                          validator: (v) => v == null ? 'Pilih dosen pembimbing' : null,
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    InkWell(
+                      onTap: _pickFile,
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        decoration: BoxDecoration(
+                          color: _file != null
+                              ? const Color(0xFFE8F5E9)
+                              : Colors.grey.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: _file != null
+                                ? const Color(0xFF4CAF50)
+                                : Colors.grey.shade200,
+                            style: _file != null ? BorderStyle.solid : BorderStyle.solid,
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Icon(
+                              _file != null
+                                  ? Icons.check_circle_outline
+                                  : Icons.upload_file,
+                              size: 36,
+                              color: _file != null
+                                  ? const Color(0xFF4CAF50)
+                                  : Colors.grey.shade400,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              _file != null ? 'File bukti dipilih' : 'Upload Bukti',
+                              style: TextStyle(
+                                color: _file != null
+                                    ? const Color(0xFF4CAF50)
+                                    : Colors.grey.shade500,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  if (_file != null)
-                    IconButton(
-                      icon: const Icon(Icons.check_circle, color: Colors.green),
-                      onPressed: null,
-                    ),
-                ],
+                  ],
+                ),
               ),
               const SizedBox(height: 24),
               Consumer<PrestasiProvider>(
                 builder: (_, provider, __) => SizedBox(
                   width: double.infinity,
-                  height: 48,
+                  height: 50,
                   child: ElevatedButton(
                     onPressed: provider.isLoading ? null : _submit,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF3949AB),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 2,
+                    ),
                     child: provider.isLoading
-                        ? const CircularProgressIndicator()
-                        : const Text('Simpan Capaian'),
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          )
+                        : const Text(
+                            'Simpan Capaian',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                   ),
                 ),
               ),

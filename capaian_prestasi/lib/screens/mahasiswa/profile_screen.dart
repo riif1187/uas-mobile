@@ -28,7 +28,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final nim = context.read<AuthProvider>().nim;
       if (nim != null) {
@@ -70,21 +69,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profil Mahasiswa')),
+      appBar: AppBar(
+        title: const Text('Profil Mahasiswa'),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF1A237E), Color(0xFF3949AB)],
+            ),
+          ),
+        ),
+      ),
       body: Consumer<MahasiswaProvider>(
         builder: (_, provider, __) {
           if (provider.isLoading && provider.data == null) {
             return const Center(child: CircularProgressIndicator());
           }
-
           if (provider.data == null) {
             return _buildSearchView(provider);
           }
-
           if (_nimController.text.isEmpty) {
             WidgetsBinding.instance.addPostFrameCallback((_) => _fillForm(provider.data!));
           }
-
           return _buildProfileForm(provider);
         },
       ),
@@ -97,16 +104,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.search, size: 64, color: Colors.grey),
-          const SizedBox(height: 16),
-          const Text('Masukkan NIM untuk melihat profil', style: TextStyle(fontSize: 16)),
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.indigo.withOpacity(0.08),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.search, size: 48, color: Color(0xFF3949AB)),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            'Masukkan NIM untuk melihat profil',
+            style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
+          ),
           const SizedBox(height: 24),
           TextField(
             controller: _searchNimController,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: 'NIM',
-              prefixIcon: Icon(Icons.badge),
-              border: OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.badge_outlined),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              filled: true,
+              fillColor: Colors.grey.shade50,
             ),
           ),
           const SizedBox(height: 16),
@@ -124,11 +143,84 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 if (nim.isEmpty) return;
                 provider.loadByNim(nim);
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF3949AB),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
               icon: const Icon(Icons.search),
               label: const Text('Cari'),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Color _sectionColor(String label) {
+    switch (label) {
+      case 'Identitas':
+        return const Color(0xFF5C6BC0);
+      case 'Akademik':
+        return const Color(0xFF4CAF50);
+      case 'Kontak':
+        return const Color(0xFFFF9800);
+      case 'Alamat':
+        return const Color(0xFF009688);
+      default:
+        return const Color(0xFF3949AB);
+    }
+  }
+
+  Widget _buildSection(String title, List<Widget> fields) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 20,
+                decoration: BoxDecoration(
+                  color: _sectionColor(title),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey.shade800,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...fields,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildField(String label, TextEditingController controller, {bool enabled = true}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: TextFormField(
+        controller: controller,
+        enabled: enabled,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          filled: true,
+          fillColor: Colors.grey.shade50,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        ),
       ),
     );
   }
@@ -140,17 +232,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
         key: _formKey,
         child: Column(
           children: [
-            _buildField('NIM', _nimController, enabled: false),
-            _buildField('Nama', _namaController),
-            _buildField('Fakultas', _fakultasController),
-            _buildField('Prodi', _prodiController),
-            _buildField('Tempat Lahir', _tempatLahirController),
-            _buildField('Tanggal Lahir', _tanggalLahirController),
-            _buildField('Jenis Kelamin', _jenisKelaminController),
-            _buildField('Email', _emailController),
-            _buildField('No Telepon', _noTeleponController),
-            _buildField('Alamat', _alamatController),
-            const SizedBox(height: 24),
+            _buildSection('Identitas', [
+              _buildField('NIM', _nimController, enabled: false),
+              _buildField('Nama Lengkap', _namaController),
+              _buildField('Tempat Lahir', _tempatLahirController),
+              _buildField('Tanggal Lahir', _tanggalLahirController),
+              _buildField('Jenis Kelamin', _jenisKelaminController),
+            ]),
+            _buildSection('Akademik', [
+              _buildField('Fakultas', _fakultasController),
+              _buildField('Program Studi', _prodiController),
+            ]),
+            _buildSection('Kontak', [
+              _buildField('Email', _emailController),
+              _buildField('No Telepon', _noTeleponController),
+            ]),
+            _buildSection('Alamat', [
+              _buildField('Alamat', _alamatController),
+            ]),
+            const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
               height: 48,
@@ -173,24 +273,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   );
                   provider.update(m);
                 },
-                child: const Text('Simpan'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF3949AB),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 2,
+                ),
+                child: const Text(
+                  'Simpan',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildField(String label, TextEditingController controller, {bool enabled = true}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: TextFormField(
-        controller: controller,
-        enabled: enabled,
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
         ),
       ),
     );
