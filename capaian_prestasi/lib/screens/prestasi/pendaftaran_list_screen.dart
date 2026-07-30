@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/prestasi_provider.dart';
 
 class PendaftaranListScreen extends StatefulWidget {
@@ -14,7 +15,8 @@ class _PendaftaranListScreenState extends State<PendaftaranListScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<PrestasiProvider>().loadPendaftaran();
+      final nim = context.read<AuthProvider>().nim;
+      context.read<PrestasiProvider>().loadPendaftaran(nim: nim);
     });
   }
 
@@ -45,7 +47,7 @@ class _PendaftaranListScreenState extends State<PendaftaranListScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Pendaftaran Prestasi')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed('/pendaftaran-create'),
+        onPressed: () => Navigator.of(context).pushNamed('/pendaftaran-create'),
         child: const Icon(Icons.add),
       ),
       body: Consumer<PrestasiProvider>(

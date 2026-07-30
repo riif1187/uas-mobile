@@ -7,12 +7,17 @@ use App\Http\Requests\StorePendaftaranPrestasiRequest;
 use App\Http\Requests\UpdatePendaftaranPrestasiRequest;
 use App\Http\Resources\PendaftaranPrestasiResource;
 use App\Models\PendaftaranPrestasi;
+use Illuminate\Http\Request;
 
 class PendaftaranPrestasiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pendaftaran = PendaftaranPrestasi::latest()->paginate(25);
+        $query = PendaftaranPrestasi::latest();
+        if ($request->has('nim')) {
+            $query->where('NIM', $request->nim);
+        }
+        $pendaftaran = $query->paginate(25);
         return PendaftaranPrestasiResource::collection($pendaftaran);
     }
 

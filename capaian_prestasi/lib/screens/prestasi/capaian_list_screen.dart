@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/prestasi_provider.dart';
 
 class CapaianListScreen extends StatefulWidget {
@@ -14,7 +15,8 @@ class _CapaianListScreenState extends State<CapaianListScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<PrestasiProvider>().loadCapaian();
+      final nim = context.read<AuthProvider>().nim;
+      context.read<PrestasiProvider>().loadCapaian(nim: nim);
     });
   }
 
@@ -23,7 +25,7 @@ class _CapaianListScreenState extends State<CapaianListScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Capaian Prestasi')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed('/capaian-create'),
+        onPressed: () => Navigator.of(context).pushNamed('/capaian-create'),
         child: const Icon(Icons.add),
       ),
       body: Consumer<PrestasiProvider>(

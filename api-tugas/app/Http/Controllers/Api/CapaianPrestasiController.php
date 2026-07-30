@@ -7,12 +7,19 @@ use App\Http\Requests\StoreCapaianPrestasiRequest;
 use App\Http\Requests\UpdateCapaianPrestasiRequest;
 use App\Http\Resources\CapaianPrestasiResource;
 use App\Models\CapaianPrestasi;
+use Illuminate\Http\Request;
 
 class CapaianPrestasiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $capaian = CapaianPrestasi::latest()->paginate(25);
+        $query = CapaianPrestasi::latest();
+        if ($request->has('nim')) {
+            $query->whereHas('pendaftaranPrestasi', function ($q) use ($request) {
+                $q->where('NIM', $request->nim);
+            });
+        }
+        $capaian = $query->paginate(25);
         return CapaianPrestasiResource::collection($capaian);
     }
 

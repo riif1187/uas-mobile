@@ -44,13 +44,13 @@ class PrestasiProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> loadPendaftaran() async {
+  Future<void> loadPendaftaran({String? nim}) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      _pendaftaran = await _pendaftaranService.getAll();
+      _pendaftaran = await _pendaftaranService.getAll(nim: nim);
     } catch (e) {
       _error = e.toString().replaceFirst('Exception: ', '');
     } finally {
@@ -66,7 +66,7 @@ class PrestasiProvider extends ChangeNotifier {
 
     try {
       await _pendaftaranService.create(data);
-      await loadPendaftaran();
+      await loadPendaftaran(nim: data['NIM']);
     } catch (e) {
       _error = e.toString().replaceFirst('Exception: ', '');
     } finally {
@@ -75,13 +75,13 @@ class PrestasiProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> loadCapaian() async {
+  Future<void> loadCapaian({String? nim}) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      _capaian = await _capaianService.getAll();
+      _capaian = await _capaianService.getAll(nim: nim);
     } catch (e) {
       _error = e.toString().replaceFirst('Exception: ', '');
     } finally {
@@ -95,6 +95,7 @@ class PrestasiProvider extends ChangeNotifier {
     required String peringkat,
     required String nip,
     String? filePath,
+    String? nim,
   }) async {
     _isLoading = true;
     _error = null;
@@ -107,7 +108,7 @@ class PrestasiProvider extends ChangeNotifier {
         nip: nip,
         filePath: filePath,
       );
-      await loadCapaian();
+      await loadCapaian(nim: nim);
     } catch (e) {
       _error = e.toString().replaceFirst('Exception: ', '');
     } finally {

@@ -8,8 +8,13 @@ class CapaianService {
 
   CapaianService(this._apiService);
 
-  Future<List<CapaianPrestasi>> getAll() async {
-    final response = await _apiService.dio.get(ApiConfig.capaianPrestasi);
+  Future<List<CapaianPrestasi>> getAll({String? nim}) async {
+    final queryParams = <String, dynamic>{};
+    if (nim != null) queryParams['nim'] = nim;
+    final response = await _apiService.dio.get(
+      ApiConfig.capaianPrestasi,
+      queryParameters: queryParams.isNotEmpty ? queryParams : null,
+    );
     final data = response.data['data'] as List;
     return data.map((e) => CapaianPrestasi.fromJson(e)).toList();
   }

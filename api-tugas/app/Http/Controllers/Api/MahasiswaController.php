@@ -6,10 +6,36 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMahasiswaRequest;
 use App\Http\Requests\UpdateMahasiswaRequest;
 use App\Http\Resources\MahasiswaResource;
+use App\Models\FuzzyKlasifikasi;
 use App\Models\Mahasiswa;
 
 class MahasiswaController extends Controller
 {
+    public function fuzzy($nim)
+    {
+        $fuzzy = FuzzyKlasifikasi::with('mahasiswa')->where('NIM', $nim)->first();
+        if (!$fuzzy) {
+            return response()->json(['message' => 'Belum ada data klasifikasi'], 404);
+        }
+        return response()->json([
+            'data' => [
+                'id' => $fuzzy->id,
+                'NIM' => $fuzzy->NIM,
+                'jumlah_prestasi' => $fuzzy->jumlah_prestasi,
+                'total_poin' => $fuzzy->total_poin,
+                'peringkat_terbaik' => $fuzzy->peringkat_terbaik,
+                'skor_fuzzy' => $fuzzy->skor_fuzzy,
+                'label_fuzzy' => $fuzzy->label_fuzzy,
+            ]
+        ]);
+    }
+
+    public function byEmail($email)
+    {
+        $mahasiswa = Mahasiswa::where('email', $email)->firstOrFail();
+        return new MahasiswaResource($mahasiswa);
+    }
+
     public function index()
     {
         $mahasiswa = Mahasiswa::latest()->paginate(25);

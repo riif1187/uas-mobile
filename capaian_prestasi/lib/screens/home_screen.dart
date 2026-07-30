@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
             onPressed: () async {
               await auth.logout();
               if (context.mounted) {
-                Navigator.pushReplacementNamed('/login');
+                Navigator.of(context).pushReplacementNamed('/login');
               }
             },
           ),
@@ -43,43 +43,43 @@ class HomeScreen extends StatelessWidget {
                     icon: Icons.person,
                     title: 'Profil',
                     color: Colors.blue,
-                    onTap: () => Navigator.pushNamed('/profile'),
+                    onTap: () => Navigator.of(context).pushNamed('/profile'),
                   ),
                   _MenuCard(
                     icon: Icons.emoji_events,
                     title: 'Referensi Lomba',
                     color: Colors.orange,
-                    onTap: () => Navigator.pushNamed('/referensi'),
+                    onTap: () => Navigator.of(context).pushNamed('/referensi'),
                   ),
                   _MenuCard(
                     icon: Icons.assignment,
                     title: 'Pendaftaran',
                     color: Colors.green,
-                    onTap: () => Navigator.pushNamed('/pendaftaran-list'),
+                    onTap: () => Navigator.of(context).pushNamed('/pendaftaran-list'),
                   ),
                   _MenuCard(
                     icon: Icons.verified,
                     title: 'Capaian',
                     color: Colors.purple,
-                    onTap: () => Navigator.pushNamed('/capaian-list'),
+                    onTap: () => Navigator.of(context).pushNamed('/capaian-list'),
                   ),
                   _MenuCard(
                     icon: Icons.forum,
                     title: 'Bimbingan',
                     color: Colors.teal,
-                    onTap: () => Navigator.pushNamed('/bimbingan'),
+                    onTap: () => Navigator.of(context).pushNamed('/bimbingan'),
                   ),
                   _MenuCard(
                     icon: Icons.auto_graph,
                     title: 'Klasifikasi Fuzzy',
                     color: Colors.red,
-                    onTap: () => Navigator.pushNamed('/fuzzy'),
+                    onTap: () => Navigator.of(context).pushNamed('/fuzzy'),
                   ),
                   _MenuCard(
                     icon: Icons.book,
                     title: 'Data Akademik',
                     color: Colors.indigo,
-                    onTap: () => Navigator.pushNamed('/data-lengkap'),
+                    onTap: () => Navigator.of(context).pushNamed('/data-lengkap'),
                   ),
                 ],
               ),

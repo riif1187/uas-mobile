@@ -33,7 +33,13 @@ class _PendaftaranCreateScreenState extends State<PendaftaranCreateScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     final auth = context.read<AuthProvider>();
-    final nim = auth.user?.email ?? '';
+    final nim = auth.nim;
+    if (nim == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Data mahasiswa tidak ditemukan. Isi profil terlebih dahulu.')),
+      );
+      return;
+    }
 
     await context.read<PrestasiProvider>().createPendaftaran({
       'NIM': nim,

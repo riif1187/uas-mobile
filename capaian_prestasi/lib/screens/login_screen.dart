@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (!mounted) return;
     if (auth.user != null) {
-      Navigator.pushReplacementNamed('/home');
+      Navigator.of(context).pushReplacementNamed('/home');
     }
   }
 
@@ -105,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 16),
                   TextButton(
-                    onPressed: () => Navigator.pushNamed('/register'),
+                    onPressed: () => Navigator.of(context).pushNamed('/register'),
                     child: const Text('Belum punya akun? Daftar'),
                   ),
                 ],

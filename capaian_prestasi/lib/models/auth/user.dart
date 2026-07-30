@@ -15,11 +15,18 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'],
-      name: json['name'],
-      email: json['email'],
+      id: _toInt(json['id']),
+      name: json['name'] ?? '',
+      email: json['email'] ?? '',
       role: json['role'],
       roles: json['roles'],
     );
+  }
+
+  static int _toInt(dynamic value) {
+    if (value is int) return value;
+    if (value is double) return value.toInt();
+    if (value is String) return int.tryParse(value) ?? 0;
+    return 0;
   }
 }

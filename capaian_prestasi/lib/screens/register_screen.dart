@@ -39,7 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (!mounted) return;
     if (auth.user != null) {
-      Navigator.pushReplacementNamed('/home');
+      Navigator.of(context).pushReplacementNamed('/home');
     }
   }
 

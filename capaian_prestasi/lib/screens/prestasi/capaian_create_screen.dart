@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/prestasi_provider.dart';
 
 class CapaianCreateScreen extends StatefulWidget {
@@ -36,11 +37,14 @@ class _CapaianCreateScreenState extends State<CapaianCreateScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
+    final nim = context.read<AuthProvider>().nim;
+
     await context.read<PrestasiProvider>().createCapaian(
       pendaftaranId: _pendaftaranIdController.text.trim(),
       peringkat: _peringkatController.text.trim(),
       nip: _nipController.text.trim(),
       filePath: _filePath,
+      nim: nim,
     );
 
     if (!mounted) return;

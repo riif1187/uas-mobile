@@ -7,8 +7,13 @@ class PendaftaranService {
 
   PendaftaranService(this._apiService);
 
-  Future<List<PendaftaranPrestasi>> getAll() async {
-    final response = await _apiService.dio.get(ApiConfig.pendaftaranPrestasi);
+  Future<List<PendaftaranPrestasi>> getAll({String? nim}) async {
+    final queryParams = <String, dynamic>{};
+    if (nim != null) queryParams['nim'] = nim;
+    final response = await _apiService.dio.get(
+      ApiConfig.pendaftaranPrestasi,
+      queryParameters: queryParams.isNotEmpty ? queryParams : null,
+    );
     final data = response.data['data'] as List;
     return data.map((e) => PendaftaranPrestasi.fromJson(e)).toList();
   }

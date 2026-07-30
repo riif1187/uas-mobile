@@ -13,10 +13,17 @@ class DataLengkapMahasiswa {
 
   factory DataLengkapMahasiswa.fromJson(Map<String, dynamic> json) {
     return DataLengkapMahasiswa(
-      id: json['id'],
+      id: _toInt(json['id']),
       nimMahasiswa: json['nim_mahasiswa'] ?? '',
       matkul: json['matkul'] ?? '',
-      tahunAkademikId: json['tahun_akademik_id'] ?? 0,
+      tahunAkademikId: _toInt(json['tahun_akademik_id']),
     );
+  }
+
+  static int _toInt(dynamic value) {
+    if (value is int) return value;
+    if (value is double) return value.toInt();
+    if (value is String) return int.tryParse(value) ?? 0;
+    return 0;
   }
 }

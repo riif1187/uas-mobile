@@ -37,14 +37,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _emailController = TextEditingController();
     _noTeleponController = TextEditingController();
     _alamatController = TextEditingController();
-    _loadData();
-  }
 
-  void _loadData() {
-    final mahasiswa = context.read<MahasiswaProvider>();
-    if (mahasiswa.data != null) {
-      _fillForm(mahasiswa.data!);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final nim = context.read<AuthProvider>().nim;
+      if (nim != null) {
+        context.read<MahasiswaProvider>().loadByNim(nim);
+      }
+    });
   }
 
   void _fillForm(Mahasiswa m) {
@@ -88,10 +87,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             return Center(child: Text(provider.error!, style: const TextStyle(color: Colors.red)));
           }
           if (provider.data == null) {
-            return const Center(child: Text('Data tidak ditemukan'));
+            return const Center(child: Text('Data tidak ditemukan. Isi profil di halaman admin.'));
           }
 
-          if (provider.data != null && _nimController.text.isEmpty) {
+          if (_nimController.text.isEmpty) {
             WidgetsBinding.instance.addPostFrameCallback((_) => _fillForm(provider.data!));
           }
 

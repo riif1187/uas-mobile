@@ -19,13 +19,27 @@ class FuzzyKlasifikasi {
 
   factory FuzzyKlasifikasi.fromJson(Map<String, dynamic> json) {
     return FuzzyKlasifikasi(
-      id: json['id'],
+      id: _toInt(json['id']),
       nim: json['NIM'] ?? '',
-      jumlahPrestasi: json['jumlah_prestasi'] ?? 0,
-      totalPoin: json['total_poin'] ?? 0,
-      peringkatTerbaik: json['peringkat_terbaik'] ?? 0,
-      skorFuzzy: (json['skor_fuzzy'] ?? 0).toDouble(),
+      jumlahPrestasi: _toInt(json['jumlah_prestasi']),
+      totalPoin: _toInt(json['total_poin']),
+      peringkatTerbaik: _toInt(json['peringkat_terbaik']),
+      skorFuzzy: _toDouble(json['skor_fuzzy']),
       labelFuzzy: json['label_fuzzy'] ?? '',
     );
+  }
+
+  static int _toInt(dynamic value) {
+    if (value is int) return value;
+    if (value is double) return value.toInt();
+    if (value is String) return int.tryParse(value) ?? 0;
+    return 0;
+  }
+
+  static double _toDouble(dynamic value) {
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
   }
 }

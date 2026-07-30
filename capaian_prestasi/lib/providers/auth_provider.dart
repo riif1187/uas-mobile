@@ -6,12 +6,14 @@ import '../services/auth/auth_service.dart';
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService;
   User? _user;
+  String? _nim;
   bool _isLoading = false;
   String? _error;
 
   AuthProvider(ApiService apiService) : _authService = AuthService(apiService);
 
   User? get user => _user;
+  String? get nim => _nim;
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get isLoggedIn => _user != null;
@@ -24,6 +26,7 @@ class AuthProvider extends ChangeNotifier {
     try {
       await _authService.login(email, password);
       await loadUser();
+      await _fetchNim(email);
     } catch (e) {
       _error = e.toString().replaceFirst('Exception: ', '');
     } finally {
@@ -41,11 +44,22 @@ class AuthProvider extends ChangeNotifier {
     try {
       await _authService.register(name, email, password, passwordConfirmation);
       await loadUser();
+      await _fetchNim(email);
     } catch (e) {
       _error = e.toString().replaceFirst('Exception: ', '');
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<void> _fetchNim(String email) async {
+    try {
+      final data = await _authService.getMahasiswaByEmail(email);
+      _nim = data['NIM'];
+      notifyListeners();
+    } catch (_) {
+      _nim = null;
     }
   }
 
@@ -62,6 +76,7 @@ class AuthProvider extends ChangeNotifier {
   Future<void> logout() async {
     await _authService.logout();
     _user = null;
+    _nim = null;
     notifyListeners();
   }
 
@@ -69,6 +84,9 @@ class AuthProvider extends ChangeNotifier {
     final loggedIn = await _authService.isLoggedIn();
     if (loggedIn) {
       await loadUser();
+      if (_user != null) {
+        await _fetchNim(_user!.email);
+      }
       return _user != null;
     }
     return false;
