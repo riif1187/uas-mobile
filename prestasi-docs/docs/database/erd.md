@@ -194,6 +194,8 @@ erDiagram
     PENDAFTARAN_PRESTASI ||--o| CAPAIAN_PRESTASI : "pendaftaran_id"
     DOSEN_TABEL ||--o{ CAPAIAN_PRESTASI : "NIP"
     MAHASISWA_TABEL ||--|| FUZZY_KLASIFIKASI : "NIM"
+    USERS ||--o{ PERSONAL_ACCESS_TOKENS : "tokenable_id"
+    USERS ||--o{ SESSIONS : "user_id"
 ```
 
 ## Tabel Utama Non-Transaksi
