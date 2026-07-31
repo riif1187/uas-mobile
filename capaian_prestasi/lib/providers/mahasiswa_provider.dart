@@ -13,6 +13,7 @@ class MahasiswaProvider extends ChangeNotifier {
   Mahasiswa? _data;
   List<DataLengkapMahasiswa> _dataLengkap = [];
   FuzzyKlasifikasi? _fuzzy;
+  List<FuzzyKlasifikasi> _fuzzyList = [];
   bool _isLoading = false;
   String? _error;
 
@@ -23,6 +24,7 @@ class MahasiswaProvider extends ChangeNotifier {
   Mahasiswa? get data => _data;
   List<DataLengkapMahasiswa> get dataLengkap => _dataLengkap;
   FuzzyKlasifikasi? get fuzzy => _fuzzy;
+  List<FuzzyKlasifikasi> get fuzzyList => _fuzzyList;
   bool get isLoading => _isLoading;
   String? get error => _error;
 
@@ -64,6 +66,21 @@ class MahasiswaProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       // silent — fuzzy refresh is best-effort
+    }
+  }
+
+  Future<void> loadFuzzyAll() async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      _fuzzyList = await _fuzzyService.getAll();
+    } catch (e) {
+      _error = e.toString().replaceFirst('Exception: ', '');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 

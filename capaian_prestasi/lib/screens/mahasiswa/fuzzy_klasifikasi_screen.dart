@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../providers/auth_provider.dart';
+import '../../models/mahasiswa/fuzzy_klasifikasi.dart';
 import '../../providers/mahasiswa_provider.dart';
 
 class FuzzyKlasifikasiScreen extends StatefulWidget {
@@ -15,23 +15,8 @@ class _FuzzyKlasifikasiScreenState extends State<FuzzyKlasifikasiScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final nim = context.read<AuthProvider>().nim;
-      if (nim != null) {
-        context.read<MahasiswaProvider>().refreshFuzzy(nim);
-      }
+      context.read<MahasiswaProvider>().loadFuzzyAll();
     });
-  }
-
-  Color _labelColor(String label) {
-    if (label.toLowerCase().contains('tinggi')) return const Color(0xFF4CAF50);
-    if (label.toLowerCase().contains('sedang')) return const Color(0xFFFF9800);
-    return const Color(0xFFE53935);
-  }
-
-  IconData _labelIcon(String label) {
-    if (label.toLowerCase().contains('tinggi')) return Icons.arrow_upward;
-    if (label.toLowerCase().contains('sedang')) return Icons.remove;
-    return Icons.arrow_downward;
   }
 
   @override
@@ -50,87 +35,27 @@ class _FuzzyKlasifikasiScreenState extends State<FuzzyKlasifikasiScreen> {
         ),
       ),
       body: Consumer<MahasiswaProvider>(
-        builder: (_, provider, __) {
-          if (provider.isLoading) {
+        builder: (_, provider, _) {
+          if (provider.isLoading && provider.fuzzyList.isEmpty) {
             return const Center(child: CircularProgressIndicator());
           }
-          final fuzzy = provider.fuzzy;
-          if (fuzzy == null) {
-            return const Center(child: Text('Belum ada data klasifikasi'));
+          if (provider.fuzzyList.isEmpty) {
+            return _EmptyState(error: provider.error);
           }
-          return Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        _labelColor(fuzzy.labelFuzzy).withOpacity(0.15),
-                        _labelColor(fuzzy.labelFuzzy).withOpacity(0.05),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: _labelColor(fuzzy.labelFuzzy).withOpacity(0.3),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: _labelColor(fuzzy.labelFuzzy).withOpacity(0.15),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          _labelIcon(fuzzy.labelFuzzy),
-                          size: 40,
-                          color: _labelColor(fuzzy.labelFuzzy),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        fuzzy.labelFuzzy,
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: _labelColor(fuzzy.labelFuzzy),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Skor: ${fuzzy.skorFuzzy.toStringAsFixed(2)}',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                _DataRow(
-                  icon: Icons.emoji_events_outlined,
-                  label: 'Jumlah Prestasi',
-                  value: fuzzy.jumlahPrestasi.toString(),
-                  color: const Color(0xFFFF9800),
-                ),
-                _DataRow(
-                  icon: Icons.score_outlined,
-                  label: 'Total Poin',
-                  value: fuzzy.totalPoin.toString(),
-                  color: const Color(0xFF9C27B0),
-                ),
-                _DataRow(
-                  icon: Icons.stars_outlined,
-                  label: 'Peringkat Terbaik',
-                  value: fuzzy.peringkatTerbaik.toString(),
-                  color: const Color(0xFF4CAF50),
-                ),
-              ],
+          return RefreshIndicator(
+            onRefresh: () => provider.loadFuzzyAll(),
+            child: ListView.separated(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(16),
+              itemCount: provider.fuzzyList.length + 1,
+              separatorBuilder: (_, _) => const SizedBox(height: 10),
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return _HeaderCard(total: provider.fuzzyList.length);
+                }
+                final item = provider.fuzzyList[index - 1];
+                return _FuzzyListItem(rank: index, item: item);
+              },
             ),
           );
         },
@@ -139,54 +64,236 @@ class _FuzzyKlasifikasiScreenState extends State<FuzzyKlasifikasiScreen> {
   }
 }
 
-class _DataRow extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
+class _HeaderCard extends StatelessWidget {
+  final int total;
 
-  const _DataRow({
-    required this.icon,
-    required this.label,
-    required this.value,
-    required this.color,
-  });
+  const _HeaderCard({required this.total});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.06),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: color.withOpacity(0.15)),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF1A237E), Color(0xFF3949AB)],
+        ),
+        borderRadius: BorderRadius.circular(18),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(12),
+              color: Colors.white.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(14),
             ),
-            child: Icon(icon, color: color, size: 24),
+            child: const Icon(Icons.emoji_events, color: Colors.white, size: 32),
           ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Leaderboard Prestasi',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '$total mahasiswa terklasifikasi',
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.8),
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FuzzyListItem extends StatelessWidget {
+  final int rank;
+  final FuzzyKlasifikasi item;
+
+  const _FuzzyListItem({required this.rank, required this.item});
+
+  Color _labelColor(String label) {
+    if (label.toLowerCase().contains('sangat')) return const Color(0xFF1A237E);
+    if (label.toLowerCase().contains('berprestasi') && !label.toLowerCase().contains('cukup') && !label.toLowerCase().contains('kurang')) {
+      return const Color(0xFF4CAF50);
+    }
+    if (label.toLowerCase().contains('cukup')) return const Color(0xFFFF9800);
+    return const Color(0xFF9E9E9E);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final labelColor = _labelColor(item.labelFuzzy);
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          _RankBadge(rank: rank),
           const SizedBox(width: 14),
           Expanded(
-            child: Text(
-              label,
-              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.nama.isNotEmpty ? item.nama : item.nim,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(Icons.badge_outlined, size: 13, color: Colors.grey.shade500),
+                    const SizedBox(width: 4),
+                    Text(
+                      item.nim,
+                      style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                    ),
+                    if (item.prodi.isNotEmpty) ...[
+                      const SizedBox(width: 8),
+                      Container(width: 3, height: 3, decoration: BoxDecoration(color: Colors.grey.shade400, shape: BoxShape.circle)),
+                      const SizedBox(width: 8),
+                      Icon(Icons.school_outlined, size: 13, color: Colors.grey.shade500),
+                      const SizedBox(width: 4),
+                      Text(
+                        item.prodi,
+                        style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                      ),
+                    ],
+                  ],
+                ),
+              ],
             ),
           ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey.shade800,
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: labelColor.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(10),
             ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  item.skorFuzzy.toStringAsFixed(2),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: labelColor,
+                  ),
+                ),
+                Text(
+                  item.labelFuzzy,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: labelColor.withValues(alpha: 0.9),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RankBadge extends StatelessWidget {
+  final int rank;
+
+  const _RankBadge({required this.rank});
+
+  @override
+  Widget build(BuildContext context) {
+    final Color bg;
+    final Color fg;
+    final IconData icon;
+    if (rank == 1) {
+      bg = const Color(0xFFFFD700);
+      fg = const Color(0xFF7A5C00);
+      icon = Icons.emoji_events;
+    } else if (rank == 2) {
+      bg = const Color(0xFFC0C0C0);
+      fg = const Color(0xFF4A4A4A);
+      icon = Icons.workspace_premium;
+    } else if (rank == 3) {
+      bg = const Color(0xFFCD7F32);
+      fg = Colors.white;
+      icon = Icons.workspace_premium;
+    } else {
+      bg = Colors.grey.shade100;
+      fg = Colors.grey.shade600;
+      icon = Icons.military_tech;
+    }
+    return Container(
+      width: 40,
+      height: 40,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12)),
+      child: icon == Icons.emoji_events
+          ? Icon(icon, color: fg, size: 20)
+          : Text(
+              '$rank',
+              style: TextStyle(fontWeight: FontWeight.bold, color: fg, fontSize: 16),
+            ),
+    );
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  final String? error;
+
+  const _EmptyState({this.error});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.fact_check_outlined, size: 56, color: Colors.grey.shade400),
+          const SizedBox(height: 16),
+          Text(
+            error ?? 'Belum ada data klasifikasi',
+            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton.icon(
+            onPressed: () => context.read<MahasiswaProvider>().loadFuzzyAll(),
+            icon: const Icon(Icons.refresh),
+            label: const Text('Muat Ulang'),
           ),
         ],
       ),

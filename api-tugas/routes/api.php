@@ -25,6 +25,7 @@ Route::middleware('auth:sanctum')->name('api.')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
 
     Route::get('/mahasiswa/by-email/{email}', [MahasiswaController::class, 'byEmail']);
+    Route::get('/fuzzy', [MahasiswaController::class, 'fuzzyIndex']);
     Route::get('/mahasiswa/{nim}/fuzzy', [MahasiswaController::class, 'fuzzy']);
     Route::post('/mahasiswa/{nim}/fuzzy/refresh', [MahasiswaController::class, 'fuzzyRefresh']);
     Route::apiResource('mahasiswa', MahasiswaController::class);

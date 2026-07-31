@@ -1,4 +1,3 @@
-import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import '../models/auth/user.dart';
 import '../services/auth/api_service.dart';

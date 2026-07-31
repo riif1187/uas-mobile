@@ -9,7 +9,7 @@ import 'services/auth/api_service.dart';
 import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
-import 'screens/home_screen.dart';
+import 'screens/main_shell_screen.dart';
 import 'screens/mahasiswa/profile_screen.dart';
 import 'screens/mahasiswa/data_lengkap_screen.dart';
 import 'screens/mahasiswa/fuzzy_klasifikasi_screen.dart';
@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
           '/': (context) => const SplashScreen(),
           '/login': (context) => const LoginScreen(),
           '/register': (context) => const RegisterScreen(),
-          '/home': (context) => const HomeScreen(),
+          '/home': (context) => const MainShellScreen(),
           '/profile': (context) => const ProfileScreen(),
           '/referensi': (context) => const ReferensiScreen(),
           '/pendaftaran-list': (context) => const PendaftaranListScreen(),

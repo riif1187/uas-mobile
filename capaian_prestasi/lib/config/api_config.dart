@@ -5,6 +5,7 @@ class ApiConfig {
   static const String logout = '/api/logout';
   static const String me = '/api/me';
   static const String mahasiswa = '/api/mahasiswa';
+  static const String fuzzy = '/api/fuzzy';
   static const String dosen = '/api/dosen';
   static const String mataKuliah = '/api/mata-kuliah';
   static const String tahunAkademik = '/api/tahun-akademik';

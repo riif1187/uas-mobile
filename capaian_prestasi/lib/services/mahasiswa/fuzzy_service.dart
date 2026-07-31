@@ -8,6 +8,14 @@ class FuzzyService {
 
   FuzzyService(this._apiService);
 
+  Future<List<FuzzyKlasifikasi>> getAll() async {
+    final response = await _apiService.dio.get(ApiConfig.fuzzy);
+    final data = response.data['data'] as List<dynamic>? ?? [];
+    return data
+        .map((e) => FuzzyKlasifikasi.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
   Future<FuzzyKlasifikasi?> getByNim(String nim) async {
     try {
       final response = await _apiService.dio.get(

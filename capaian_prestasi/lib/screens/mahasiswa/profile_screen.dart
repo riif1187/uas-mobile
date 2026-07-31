@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../models/mahasiswa/mahasiswa.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/mahasiswa_provider.dart';
+import '../../widgets/fuzzy_card.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -226,12 +227,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildProfileForm(MahasiswaProvider provider) {
+    final nim = context.read<AuthProvider>().nim;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Form(
         key: _formKey,
         child: Column(
           children: [
+            FuzzyCard(
+              fuzzy: provider.fuzzy,
+              isLoading: provider.isLoading,
+              onRefresh: nim != null ? () => provider.refreshFuzzy(nim) : null,
+            ),
+            const SizedBox(height: 20),
             _buildSection('Identitas', [
               _buildField('NIM', _nimController, enabled: false),
               _buildField('Nama Lengkap', _namaController),

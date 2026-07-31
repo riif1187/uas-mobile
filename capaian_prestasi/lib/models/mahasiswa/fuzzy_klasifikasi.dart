@@ -1,6 +1,9 @@
 class FuzzyKlasifikasi {
   final int id;
   final String nim;
+  final String nama;
+  final String prodi;
+  final String fakultas;
   final int jumlahPrestasi;
   final int totalPoin;
   final int peringkatTerbaik;
@@ -10,6 +13,9 @@ class FuzzyKlasifikasi {
   FuzzyKlasifikasi({
     required this.id,
     required this.nim,
+    this.nama = '',
+    this.prodi = '',
+    this.fakultas = '',
     required this.jumlahPrestasi,
     required this.totalPoin,
     required this.peringkatTerbaik,
@@ -21,6 +27,9 @@ class FuzzyKlasifikasi {
     return FuzzyKlasifikasi(
       id: _toInt(json['id']),
       nim: json['NIM'] ?? '',
+      nama: json['nama'] ?? '',
+      prodi: json['prodi'] ?? '',
+      fakultas: json['fakultas'] ?? '',
       jumlahPrestasi: _toInt(json['jumlah_prestasi']),
       totalPoin: _toInt(json['total_poin']),
       peringkatTerbaik: _toInt(json['peringkat_terbaik']),

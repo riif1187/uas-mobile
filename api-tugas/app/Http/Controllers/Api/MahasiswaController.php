@@ -12,6 +12,25 @@ use App\Services\FuzzyPrestasiService;
 
 class MahasiswaController extends Controller
 {
+    public function fuzzyIndex()
+    {
+        $results = app(FuzzyPrestasiService::class)->classifyAll();
+
+        return response()->json([
+            'data' => array_map(fn ($r) => [
+                'NIM'               => $r['NIM'],
+                'nama'              => $r['nama'],
+                'fakultas'          => $r['fakultas'],
+                'prodi'             => $r['prodi'],
+                'jumlah_prestasi'   => $r['jumlah_prestasi'],
+                'total_poin'        => $r['total_poin'],
+                'peringkat_terbaik' => $r['peringkat_terbaik'] === '-' ? 0 : (int) $r['peringkat_terbaik'],
+                'skor_fuzzy'        => $r['skor'],
+                'label_fuzzy'       => $r['label'],
+            ], $results),
+        ]);
+    }
+
     public function fuzzy($nim)
     {
         $fuzzy = FuzzyKlasifikasi::with('mahasiswa')->where('NIM', $nim)->first();
@@ -87,7 +106,7 @@ class MahasiswaController extends Controller
             [
                 'jumlah_prestasi'   => $result['jumlah_prestasi'],
                 'total_poin'        => $result['total_poin'],
-                'peringkat_terbaik' => $result['peringkat_terbaik'],
+                'peringkat_terbaik' => $result['peringkat_terbaik'] === '-' ? 0 : (int) $result['peringkat_terbaik'],
                 'skor_fuzzy'        => $result['skor'],
                 'label_fuzzy'       => $result['label'],
             ]
