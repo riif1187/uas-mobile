@@ -26,7 +26,9 @@ class PendaftaranPrestasiController extends Controller
 
     public function store(StorePendaftaranPrestasiRequest $request)
     {
-        $pendaftaran = PendaftaranPrestasi::create($request->validated());
+        $data = $request->validated();
+        $data['status'] = $data['status'] ?? 'disetujui';
+        $pendaftaran = PendaftaranPrestasi::create($data);
         return (new PendaftaranPrestasiResource($pendaftaran))
             ->additional(['message' => 'Data berhasil ditambahkan'])
             ->response()

@@ -1,0 +1,486 @@
+/* ============================================================
+   Design tokens — dark premium theme (inspirasi landing page
+   SIA, dengan identitas berbeda: aksen emerald, serif Fraunces)
+   ============================================================ */
+:root {
+  --lp-bg: #0b0e14;
+  --lp-bg-soft: #0f131c;
+  --lp-surface: #121722;
+  --lp-surface-2: #171e2c;
+  --lp-border: #232b3d;
+  --lp-border-strong: #31405c;
+  --lp-text: #c7cdd9;
+  --lp-text-muted: #7d8698;
+  --lp-heading: #eef1f7;
+  --lp-accent: #34d399;
+  --lp-accent-soft: rgba(52, 211, 153, 0.12);
+  --lp-accent-2: #818cf8;
+
+  --ifm-color-primary: #2ec592;
+  --ifm-color-primary-dark: #27b387;
+  --ifm-color-primary-darker: #1fa877;
+  --ifm-color-primary-darkest: #14855d;
+  --ifm-color-primary-light: #4cdbb0;
+  --ifm-color-primary-lighter: #5fe0b8;
+  --ifm-color-primary-lightest: #8ceacd;
+
+  --ifm-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, Helvetica, Arial, sans-serif;
+  --ifm-font-family-monospace: 'IBM Plex Mono', ui-monospace, SFMono-Regular,
+    Menlo, Consolas, monospace;
+  --ifm-heading-font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --ifm-code-font-size: 92%;
+  --ifm-leading: 1.75;
+}
+
+[data-theme='dark'] {
+  --ifm-background-color: var(--lp-bg);
+  --ifm-background-surface-color: var(--lp-surface);
+  --ifm-navbar-background-color: transparent;
+  --ifm-footer-background-color: #090c12;
+  --ifm-color-content: var(--lp-text);
+  --ifm-color-content-secondary: var(--lp-text-muted);
+  --ifm-heading-color: var(--lp-heading);
+  --ifm-link-color: var(--lp-accent);
+  --ifm-link-hover-color: #5fe0b8;
+  --ifm-toc-border-color: var(--lp-border);
+  --ifm-menu-color: var(--lp-text-muted);
+  --ifm-menu-color-active: var(--lp-accent);
+  --ifm-menu-color-background-active: var(--lp-accent-soft);
+  --ifm-hover-overlay: rgba(255, 255, 255, 0.03);
+  --ifm-blockquote-border-color: var(--lp-accent);
+  --ifm-blockquote-background-color: var(--lp-accent-soft);
+  --ifm-table-stripe-background: rgba(255, 255, 255, 0.02);
+  --ifm-code-background: rgba(52, 211, 153, 0.12);
+  --ifm-code-color: #7fe7c6;
+  --docusaurus-highlighted-code-line-bg: rgba(129, 140, 248, 0.16);
+  --docusaurus-collapse-button-bg: transparent;
+  --docusaurus-collapse-button-bg-hover: rgba(255, 255, 255, 0.05);
+}
+
+/* ============================================================
+   Base typography
+   ============================================================ */
+body {
+  background: var(--lp-bg);
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4 {
+  color: var(--lp-heading);
+  letter-spacing: -0.015em;
+}
+
+.markdown h1 {
+  font-size: 2.35rem;
+}
+
+.markdown h2 {
+  font-size: 1.65rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--lp-border);
+}
+
+.markdown a {
+  font-weight: 500;
+}
+
+strong {
+  color: var(--lp-heading);
+}
+
+/* ============================================================
+   Navbar
+   ============================================================ */
+.navbar {
+  background: rgba(11, 14, 20, 0.82);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--lp-border);
+}
+
+.navbar__title {
+  font-family: var(--ifm-heading-font-family);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.navbar__link {
+  font-size: 0.9rem;
+}
+
+.navbar__link--active {
+  color: var(--lp-accent) !important;
+}
+
+.navbar__link:hover {
+  color: var(--lp-heading) !important;
+}
+
+/* ============================================================
+   Sidebar
+   ============================================================ */
+.theme-doc-sidebar-container {
+  border-right: 1px solid var(--lp-border) !important;
+}
+
+.menu__link {
+  font-size: 0.88rem;
+}
+
+.menu__link:hover {
+  color: var(--lp-heading);
+  background: var(--lp-hover-overlay);
+}
+
+.menu__link--active {
+  background: var(--lp-accent-soft) !important;
+  color: var(--lp-accent) !important;
+}
+
+/* ============================================================
+   Table of contents
+   ============================================================ */
+.table-of-contents {
+  font-size: 0.84rem;
+}
+
+.table-of-contents__link {
+  color: var(--lp-text-muted);
+}
+
+.table-of-contents__link--active {
+  color: var(--lp-accent);
+  border-left: 2px solid var(--lp-accent);
+  margin-left: -1px;
+}
+
+/* ============================================================
+   Tables
+   ============================================================ */
+table {
+  border-collapse: collapse;
+  border-color: var(--lp-border);
+}
+
+thead th {
+  background: var(--lp-surface-2);
+  color: var(--lp-heading);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+tbody tr {
+  border-bottom: 1px solid var(--lp-border);
+}
+
+tbody tr:nth-child(even) {
+  background: var(--ifm-table-stripe-background);
+}
+
+/* ============================================================
+   Blockquote
+   ============================================================ */
+blockquote {
+  color: var(--lp-text);
+  border-left-width: 3px;
+  border-radius: 0 0.4rem 0.4rem 0;
+}
+
+/* ============================================================
+   Code & code blocks
+   ============================================================ */
+:not(pre) > code {
+  background: var(--lp-accent-soft);
+  color: #7fe7c6;
+  border: 1px solid rgba(52, 211, 153, 0.18);
+  border-radius: 0.3rem;
+  padding: 0.15em 0.4em;
+  font-weight: 500;
+}
+
+.theme-code-block {
+  border: 1px solid var(--lp-border);
+  border-radius: 0.6rem;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+}
+
+pre {
+  background: #0d1017 !important;
+}
+
+/* ============================================================
+   Mermaid
+   ============================================================ */
+.theme-doc-markdown .mermaid {
+  background: var(--lp-bg-soft);
+  border: 1px solid var(--lp-border);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+/* ============================================================
+   Pagination (prev / next)
+   ============================================================ */
+.pagination-nav__link {
+  border-color: var(--lp-border);
+  background: var(--lp-surface);
+}
+
+.pagination-nav__link:hover {
+  border-color: var(--lp-accent);
+}
+
+.pagination-nav__sublabel {
+  color: var(--lp-text-muted);
+}
+
+.pagination-nav__label {
+  color: var(--lp-heading);
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.footer--dark {
+  background-color: var(--ifm-footer-background-color);
+  border-top: 1px solid var(--lp-border);
+}
+
+.footer--dark .footer__title {
+  color: var(--lp-heading);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.footer--dark .footer__link-item {
+  color: var(--lp-text-muted);
+}
+
+.footer--dark .footer__link-item:hover {
+  color: var(--lp-accent);
+  text-decoration: none;
+}
+
+/* ============================================================
+   Landing page components (halaman Beranda)
+   ============================================================ */
+.lp-hero {
+  text-align: center;
+  padding: 4.5rem 1rem 2.5rem;
+}
+
+.lp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--lp-accent);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  background: var(--lp-accent-soft);
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+}
+
+.lp-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lp-accent);
+  box-shadow: 0 0 10px var(--lp-accent);
+}
+
+.lp-title {
+  font-family: var(--ifm-heading-font-family);
+  font-size: clamp(2.1rem, 5vw, 3.3rem);
+  line-height: 1.12;
+  margin: 1.4rem 0 1.1rem;
+  color: var(--lp-heading);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.lp-title em {
+  font-style: italic;
+  color: var(--lp-accent);
+}
+
+.lp-subtitle {
+  color: var(--lp-text-muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  max-width: 660px;
+  margin: 0 auto 1.9rem;
+}
+
+.lp-cta {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2.2rem;
+}
+
+.lp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.62rem 1.15rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none !important;
+  transition: transform 0.15s ease, border-color 0.15s ease,
+    background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.lp-btn-primary {
+  background: var(--lp-accent);
+  color: #04120c !important;
+  box-shadow: 0 0 26px rgba(52, 211, 153, 0.25);
+}
+
+.lp-btn-primary:hover {
+  background: #45dba7;
+  transform: translateY(-1px);
+}
+
+.lp-btn-secondary {
+  border: 1px solid var(--lp-border-strong);
+  color: var(--lp-text) !important;
+  background: var(--lp-surface);
+}
+
+.lp-btn-secondary:hover {
+  border-color: var(--lp-accent);
+  color: var(--lp-accent) !important;
+}
+
+.lp-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.lp-pills span {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lp-text-muted);
+  border: 1px solid var(--lp-border);
+  background: var(--lp-surface);
+  border-radius: 999px;
+  padding: 0.32rem 0.85rem;
+}
+
+.lp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 2.5rem;
+}
+
+.lp-card {
+  display: block;
+  position: relative;
+  padding: 1.3rem;
+  border: 1px solid var(--lp-border);
+  border-radius: 0.75rem;
+  background: linear-gradient(180deg, var(--lp-surface), var(--lp-bg-soft));
+  color: var(--lp-text) !important;
+  text-decoration: none !important;
+  overflow: hidden;
+  transition: transform 0.15s ease, border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.lp-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--lp-accent), var(--lp-accent-2));
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.lp-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--lp-accent);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(52, 211, 153, 0.18);
+}
+
+.lp-card:hover::after {
+  opacity: 1;
+}
+
+.lp-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.lp-card-tag {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lp-text-muted);
+  border: 1px solid var(--lp-border);
+  border-radius: 999px;
+  padding: 0.22rem 0.6rem;
+}
+
+.lp-card h3 {
+  font-family: var(--ifm-heading-font-family);
+  font-size: 1.22rem;
+  margin: 0 0 0.45rem;
+  color: var(--lp-heading);
+  letter-spacing: -0.01em;
+}
+
+.lp-card p {
+  margin: 0;
+  font-size: 0.87rem;
+  color: var(--lp-text-muted);
+  line-height: 1.6;
+}
+
+.lp-card-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.95rem;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--lp-accent);
+  opacity: 0.8;
+}
+
+.lp-card:hover .lp-card-more {
+  opacity: 1;
+}
+
+@media (max-width: 480px) {
+  .lp-hero {
+    padding: 3rem 0.5rem 2rem;
+  }
+}

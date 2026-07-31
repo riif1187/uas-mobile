@@ -127,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Gunakan menu di samping kiri untuk mengakses profil, referensi lomba, pendaftaran, capaian, bimbingan, dan data akademik.',
+                      'Gunakan menu untuk mengakses profil, referensi lomba, pendaftaran, capaian, bimbingan, dan data akademik.',
                       style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
                     ),
                   ),
